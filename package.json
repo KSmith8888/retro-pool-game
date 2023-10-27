@@ -1,0 +1,27 @@
+{
+    "name": "retro-pool-game",
+    "version": "1.0.0",
+    "description": "A remake of a classic online pool game",
+    "author": "Kevyn Smith",
+    "license": "MIT",
+    "main": "src/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "vite",
+        "preview": "vite preview --port 5173",
+        "build": "tsc && vite build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/KSmith8888/retro-pool-game.git"
+    },
+    "bugs": {
+        "url": "https://github.com/KSmith8888/retro-pool-game/issues"
+    },
+    "homepage": "https://github.com/KSmith8888/retro-pool-game#readme",
+    "devDependencies": {
+        "@types/node": "^20.8.9",
+        "typescript": "^5.2.2",
+        "vite": "^4.5.0"
+    }
+}
