@@ -1,11 +1,16 @@
 import Ball from "../../src/ball";
+import CueBall from "../../src/cue-ball";
 import Table from "../../src/table";
+import CueStick from "../../src/cue-stick";
+import { areObjectsColliding } from "../../src/utils/collision";
 
 export default class Game {
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
     table: Table;
+    cueBall: CueBall;
     balls: Array<Ball>;
+    cueStick: CueStick;
     lastTime: number;
     interval: number;
     timer: number;
@@ -18,40 +23,57 @@ export default class Game {
         this.canvas.width = 900;
         this.canvas.height = 600;
         this.table = new Table(this.ctx);
+        this.cueBall = new CueBall(this, this.ctx, this.table, "Cue");
         this.balls = [];
         this.initializeBalls();
+        this.cueStick = new CueStick(this, this.ctx);
         this.lastTime = 0;
         this.interval = 1000 / 60;
         this.timer = 0;
         this.playerTurn = true;
         this.hit = this.canvas.addEventListener("mousemove", (e) => {
             if (this.playerTurn) {
-                this.cueCollision(e.clientX, e.clientY);
+                this.cueStick.circleX = e.clientX;
+                this.cueStick.circleY = e.clientY;
+                this.cueCollision();
             }
         });
     }
     initializeBalls() {
-        this.balls.push(new Ball(this, this.ctx, this.table));
-        this.balls.push(new Ball(this, this.ctx, this.table));
+        const idArray = [
+            "1",
+            "2",
+            "3",
+            "4,",
+            "5",
+            "6",
+            "7",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "15",
+        ];
+        for (let i = 0; i < idArray.length; i++) {
+            this.balls.push(new Ball(this, this.ctx, this.table, idArray[i]));
+        }
     }
     updateBalls() {
+        this.cueBall.updatePosition();
+        this.cueBall.render();
         this.balls.forEach((ball) => {
             ball.updatePosition();
             ball.render();
         });
     }
-    cueCollision(x: number, y: number) {
-        this.balls.forEach((ball) => {
-            if (
-                x >= ball.x &&
-                x < ball.x + ball.width &&
-                y >= ball.y &&
-                y < ball.y + ball.height
-            ) {
-                ball.isMoving = true;
-                this.playerTurn = false;
-            }
-        });
+    cueCollision() {
+        if (areObjectsColliding(this.cueStick, this.cueBall)) {
+            this.cueBall.isMoving = true;
+            this.cueBall.speedX = 15;
+            this.cueBall.speedY = 15;
+            //this.playerTurn = false;
+        }
     }
     animate(timeStamp: number) {
         const deltaTime = timeStamp - this.lastTime;
@@ -60,6 +82,7 @@ export default class Game {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.table.render();
             this.updateBalls();
+            this.cueStick.render();
             this.timer -= deltaTime;
         } else {
             this.timer += deltaTime;
