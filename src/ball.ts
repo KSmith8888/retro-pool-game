@@ -43,33 +43,38 @@ export default class Ball {
         this.velocityAdj = 0.1;
     }
     tableCollision() {
-        if (
-            this.x + this.width >= this.table.x + this.table.width ||
-            this.x <= this.table.x
-        ) {
-            this.speedX = -this.speedX;
+        if (this.circleX + this.radius >= this.table.rightEdge) {
+            if (this.speedX > 0) {
+                this.speedX = -this.speedX;
+            }
             this.velocityAdj = this.velocityAdj + 0.01;
-        } else if (
-            this.y + this.height >= this.table.y + this.table.height ||
-            this.y <= this.table.y
-        ) {
-            this.speedY = -this.speedY;
+        } else if (this.circleX - this.radius <= this.table.x) {
+            if (this.speedX < 0) {
+                this.speedX = -this.speedX;
+            }
+            this.velocityAdj = this.velocityAdj + 0.01;
+        } else if (this.circleY + this.radius >= this.table.bottomEdge) {
+            if (this.speedY > 0) {
+                this.speedY = -this.speedY;
+            }
+            this.velocityAdj = this.velocityAdj + 0.01;
+        } else if (this.circleY - this.radius <= this.table.y) {
+            if (this.speedY < 0) {
+                this.speedY = -this.speedY;
+            }
             this.velocityAdj = this.velocityAdj + 0.01;
         }
     }
     ballCollision() {
-        this.game.balls.forEach((ball) => {
-            if (this.id !== ball.id && areObjectsColliding(this, ball)) {
-                if (this.speedX === 0 && this.speedY === 0) {
-                    this.isMoving = true;
-                    this.velocityAdj = this.velocityAdj + 0.05;
-                    this.speedX = ball.speedX * 0.9;
-                    this.speedY = ball.speedY * 0.9;
-                } else {
+        const otherBalls = this.game.balls.filter(
+            (other) => this.id !== other.id
+        );
+        otherBalls.forEach((ball) => {
+            if (areObjectsColliding(this, ball)) {
+                if (!ball.isMoving) {
                     ball.isMoving = true;
-                    ball.velocityAdj = ball.velocityAdj + 0.05;
-                    ball.speedX = this.speedX * 0.9;
-                    ball.speedY = this.speedY * 0.9;
+                    ball.speedX = this.speedX * 0.8;
+                    ball.speedY = this.speedY * 0.8;
                 }
             }
         });
@@ -91,15 +96,14 @@ export default class Ball {
         }
         if (this.speedX === 0 && this.speedY === 0) {
             this.isMoving = false;
+            this.velocityAdj = 0.1;
         }
     }
     updatePosition() {
         if (this.isMoving) {
-            this.tableCollision();
             this.ballCollision();
+            this.tableCollision();
             this.updateVelocity();
-            this.x += this.speedX;
-            this.y += this.speedY;
             this.circleX += this.speedX;
             this.circleY += this.speedY;
         }

@@ -9,7 +9,7 @@ export default class Game {
     ctx: CanvasRenderingContext2D;
     table: Table;
     cueBall: CueBall;
-    balls: Array<Ball>;
+    balls: Array<Ball | CueBall>;
     cueStick: CueStick;
     lastTime: number;
     interval: number;
@@ -58,10 +58,9 @@ export default class Game {
         for (let i = 0; i < idArray.length; i++) {
             this.balls.push(new Ball(this, this.ctx, this.table, idArray[i]));
         }
+        this.balls.push(this.cueBall);
     }
     updateBalls() {
-        this.cueBall.updatePosition();
-        this.cueBall.render();
         this.balls.forEach((ball) => {
             ball.updatePosition();
             ball.render();
@@ -69,9 +68,17 @@ export default class Game {
     }
     cueCollision() {
         if (areObjectsColliding(this.cueStick, this.cueBall)) {
+            if (this.cueStick.circleX > this.cueBall.circleX) {
+                this.cueBall.speedX = -15;
+            } else {
+                this.cueBall.speedX = 15;
+            }
+            if (this.cueStick.circleX > this.cueBall.circleY) {
+                this.cueBall.speedY = 15;
+            } else {
+                this.cueBall.speedY = -15;
+            }
             this.cueBall.isMoving = true;
-            this.cueBall.speedX = 15;
-            this.cueBall.speedY = 15;
             //this.playerTurn = false;
         }
     }
