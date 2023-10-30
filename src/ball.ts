@@ -23,14 +23,16 @@ export default class Ball {
         game: Game,
         ctx: CanvasRenderingContext2D,
         table: Table,
-        id: string
+        id: string,
+        x: number,
+        y: number
     ) {
         this.game = game;
         this.ctx = ctx;
         this.table = table;
         this.id = id;
-        this.x = this.table.x + Math.floor(Math.random() * 300);
-        this.y = this.table.y + Math.floor(Math.random() * 250);
+        this.x = x;
+        this.y = y;
         this.width = 30;
         this.height = 30;
         this.radius = 15;
@@ -70,11 +72,28 @@ export default class Ball {
             (other) => this.id !== other.id
         );
         otherBalls.forEach((ball) => {
-            if (areObjectsColliding(this, ball)) {
+            const collisionData = areObjectsColliding(this, ball);
+            if (collisionData) {
+                const newSpeedX = Math.floor(collisionData.angleX * 8);
+                const newSpeedY = Math.floor(collisionData.angleY * 8);
+                this.velocityAdj = this.velocityAdj + 0.01;
+                ball.velocityAdj = ball.velocityAdj + 0.01;
                 if (!ball.isMoving) {
+                    //This ball was moving, other was still before collision
                     ball.isMoving = true;
-                    ball.speedX = this.speedX * 0.8;
-                    ball.speedY = this.speedY * 0.8;
+                    ball.speedX = newSpeedX;
+                    ball.speedY = newSpeedY;
+                    this.speedX = this.speedX * 0.2;
+                    this.speedY = this.speedY * 0.2;
+                } else if (!this.isMoving) {
+                    //Other ball was moving, this ball was still before collision
+                    this.isMoving = true;
+                    this.speedX = newSpeedX;
+                    this.speedY = newSpeedY;
+                    ball.speedX = ball.speedX * 0.2;
+                    ball.speedY = ball.speedY * 0.2;
+                } else {
+                    //Both were already moving before collision
                 }
             }
         });

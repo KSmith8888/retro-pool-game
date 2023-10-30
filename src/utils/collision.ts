@@ -8,10 +8,12 @@ export function areObjectsColliding(
 ) {
     const dx = ball2.circleX - ball1.circleX;
     const dy = ball2.circleY - ball1.circleY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
+    const distance = Math.hypot(dx, dy);
+    const angleX = dx / distance;
+    const angleY = dy / distance;
     if (distance <= ball1.radius + ball2.radius) {
-        return true;
+        return { dx: dx, dy: dy, angleX: angleX, angleY: angleY };
     } else {
-        return false;
+        return null;
     }
 }

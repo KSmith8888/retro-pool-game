@@ -7,9 +7,11 @@ export default class CueBall extends Ball {
         game: Game,
         ctx: CanvasRenderingContext2D,
         table: Table,
-        id: string
+        id: string,
+        x: number,
+        y: number
     ) {
-        super(game, ctx, table, id);
+        super(game, ctx, table, id, x, y);
     }
     render() {
         this.ctx.save();
