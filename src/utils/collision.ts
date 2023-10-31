@@ -1,17 +1,18 @@
 import Ball from "../ball";
 import CueBall from "../cue-ball";
 import CueStick from "../cue-stick";
+import Pocket from "../pocket";
 
 export function areObjectsColliding(
-    ball1: Ball | CueBall | CueStick,
-    ball2: Ball | CueBall | CueStick
+    object1: Ball | CueBall | CueStick | Pocket,
+    object2: Ball | CueBall | CueStick | Pocket
 ) {
-    const dx = ball2.circleX - ball1.circleX;
-    const dy = ball2.circleY - ball1.circleY;
+    const dx = object2.circleX - object1.circleX;
+    const dy = object2.circleY - object1.circleY;
     const distance = Math.hypot(dx, dy);
     const angleX = dx / distance;
     const angleY = dy / distance;
-    if (distance <= ball1.radius + ball2.radius) {
+    if (distance < object1.radius + object2.radius) {
         return { dx: dx, dy: dy, angleX: angleX, angleY: angleY };
     } else {
         return null;

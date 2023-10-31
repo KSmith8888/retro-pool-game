@@ -18,7 +18,9 @@ export default class Ball {
     speedX: number;
     speedY: number;
     isMoving: boolean;
-    velocityAdj: number;
+    velocity: number;
+    drag: number;
+    isActive: boolean;
     constructor(
         game: Game,
         ctx: CanvasRenderingContext2D,
@@ -42,29 +44,31 @@ export default class Ball {
         this.speedY = 0;
         this.arcNum = 2 * Math.PI;
         this.isMoving = false;
-        this.velocityAdj = 0.1;
+        this.velocity = 10;
+        this.drag = 0.1;
+        this.isActive = true;
     }
     tableCollision() {
         if (this.circleX + this.radius >= this.table.rightEdge) {
             if (this.speedX > 0) {
-                this.speedX = -this.speedX;
+                this.speedX = this.speedX * -0.8;
             }
-            this.velocityAdj = this.velocityAdj + 0.01;
+            this.drag = this.drag + 0.01;
         } else if (this.circleX - this.radius <= this.table.x) {
             if (this.speedX < 0) {
-                this.speedX = -this.speedX;
+                this.speedX = this.speedX * -0.8;
             }
-            this.velocityAdj = this.velocityAdj + 0.01;
+            this.drag = this.drag + 0.01;
         } else if (this.circleY + this.radius >= this.table.bottomEdge) {
             if (this.speedY > 0) {
-                this.speedY = -this.speedY;
+                this.speedY = this.speedY * -0.8;
             }
-            this.velocityAdj = this.velocityAdj + 0.01;
+            this.drag = this.drag + 0.01;
         } else if (this.circleY - this.radius <= this.table.y) {
             if (this.speedY < 0) {
-                this.speedY = -this.speedY;
+                this.speedY = this.speedY * -0.8;
             }
-            this.velocityAdj = this.velocityAdj + 0.01;
+            this.drag = this.drag + 0.01;
         }
     }
     ballCollision() {
@@ -76,22 +80,18 @@ export default class Ball {
             if (collisionData) {
                 const newSpeedX = Math.floor(collisionData.angleX * 8);
                 const newSpeedY = Math.floor(collisionData.angleY * 8);
-                this.velocityAdj = this.velocityAdj + 0.01;
-                ball.velocityAdj = ball.velocityAdj + 0.01;
                 if (!ball.isMoving) {
                     //This ball was moving, other was still before collision
                     ball.isMoving = true;
                     ball.speedX = newSpeedX;
                     ball.speedY = newSpeedY;
-                    this.speedX = this.speedX * 0.2;
-                    this.speedY = this.speedY * 0.2;
+                    this.drag = this.drag + 0.2;
                 } else if (!this.isMoving) {
                     //Other ball was moving, this ball was still before collision
                     this.isMoving = true;
                     this.speedX = newSpeedX;
                     this.speedY = newSpeedY;
-                    ball.speedX = ball.speedX * 0.2;
-                    ball.speedY = ball.speedY * 0.2;
+                    ball.drag = ball.drag + 0.2;
                 } else {
                     //Both were already moving before collision
                 }
@@ -99,29 +99,35 @@ export default class Ball {
         });
     }
     updateVelocity() {
-        if (this.speedX >= this.velocityAdj) {
-            this.speedX -= this.velocityAdj;
-        } else if (this.speedX <= -this.velocityAdj) {
-            this.speedX += this.velocityAdj;
+        if (this.velocity > 0.01) {
+            this.velocity -= 0.01;
+        } else {
+            this.velocity = 0;
+        }
+        if (this.speedX >= this.drag) {
+            this.speedX -= this.drag;
+        } else if (this.speedX <= -this.drag) {
+            this.speedX += this.drag;
         } else {
             this.speedX = 0;
         }
-        if (this.speedY >= this.velocityAdj) {
-            this.speedY -= this.velocityAdj;
-        } else if (this.speedY <= -this.velocityAdj) {
-            this.speedY += this.velocityAdj;
+        if (this.speedY >= this.drag) {
+            this.speedY -= this.drag;
+        } else if (this.speedY <= -this.drag) {
+            this.speedY += this.drag;
         } else {
             this.speedY = 0;
         }
         if (this.speedX === 0 && this.speedY === 0) {
             this.isMoving = false;
-            this.velocityAdj = 0.1;
+            this.drag = 0.1;
+            this.velocity = 10;
         }
     }
     updatePosition() {
         if (this.isMoving) {
-            this.ballCollision();
             this.tableCollision();
+            this.ballCollision();
             this.updateVelocity();
             this.circleX += this.speedX;
             this.circleY += this.speedY;
