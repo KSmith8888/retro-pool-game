@@ -50,21 +50,25 @@ export default class Ball {
     }
     tableCollision() {
         if (this.circleX + this.radius >= this.table.rightEdge) {
+            //this.circleX = this.table.rightEdge - this.radius;
             if (this.speedX > 0) {
                 this.speedX = this.speedX * -0.8;
             }
             this.drag = this.drag + 0.01;
         } else if (this.circleX - this.radius <= this.table.x) {
+            //this.circleX = this.table.x + this.radius;
             if (this.speedX < 0) {
                 this.speedX = this.speedX * -0.8;
             }
             this.drag = this.drag + 0.01;
         } else if (this.circleY + this.radius >= this.table.bottomEdge) {
+            //this.circleY = this.table.bottomEdge - this.radius;
             if (this.speedY > 0) {
                 this.speedY = this.speedY * -0.8;
             }
             this.drag = this.drag + 0.01;
         } else if (this.circleY - this.radius <= this.table.y) {
+            //this.circleY = this.table.y + this.radius;
             if (this.speedY < 0) {
                 this.speedY = this.speedY * -0.8;
             }
@@ -78,32 +82,37 @@ export default class Ball {
         otherBalls.forEach((ball) => {
             const collisionData = areObjectsColliding(this, ball);
             if (collisionData) {
-                const newSpeedX = Math.floor(collisionData.angleX * 8);
-                const newSpeedY = Math.floor(collisionData.angleY * 8);
+                const newSpeedX = Math.floor(collisionData.angleX);
+                const newSpeedY = Math.floor(collisionData.angleY);
                 if (!ball.isMoving) {
                     //This ball was moving, other was still before collision
                     ball.isMoving = true;
-                    ball.speedX = newSpeedX;
-                    ball.speedY = newSpeedY;
-                    this.drag = this.drag + 0.2;
+                    ball.speedX = this.speedX;
+                    ball.speedY = this.speedY;
+                    this.speedX = this.speedX * -0.2;
+                    this.speedY = this.speedY * -0.2;
+                    this.velocity -= 1;
                 } else if (!this.isMoving) {
                     //Other ball was moving, this ball was still before collision
                     this.isMoving = true;
-                    this.speedX = newSpeedX;
-                    this.speedY = newSpeedY;
-                    ball.drag = ball.drag + 0.2;
+                    this.speedX = ball.speedX;
+                    this.speedY = ball.speedY;
+                    ball.speedX = ball.speedX * -0.2;
+                    ball.speedY = ball.speedY * -0.2;
+                    ball.velocity -= 1;
                 } else {
                     //Both were already moving before collision
+                    this.speedX = -newSpeedX * this.velocity;
+                    this.speedY = -newSpeedY * this.velocity;
+                    this.velocity -= 1;
+                    ball.speedX = -newSpeedX * ball.velocity;
+                    ball.speedY = -newSpeedY * ball.velocity;
+                    ball.velocity -= 1;
                 }
             }
         });
     }
     updateVelocity() {
-        if (this.velocity > 0.01) {
-            this.velocity -= 0.01;
-        } else {
-            this.velocity = 0;
-        }
         if (this.speedX >= this.drag) {
             this.speedX -= this.drag;
         } else if (this.speedX <= -this.drag) {
@@ -125,9 +134,9 @@ export default class Ball {
         }
     }
     updatePosition() {
+        this.tableCollision();
+        this.ballCollision();
         if (this.isMoving) {
-            this.tableCollision();
-            this.ballCollision();
             this.updateVelocity();
             this.circleX += this.speedX;
             this.circleY += this.speedY;
