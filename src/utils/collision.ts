@@ -12,7 +12,7 @@ export function areObjectsColliding(
     const distance = Math.hypot(dx, dy);
     const angleX = dx / distance;
     const angleY = dy / distance;
-    if (distance <= object1.radius + object2.radius) {
+    if (distance < object1.radius + object2.radius) {
         return { dx: dx, dy: dy, angleX: angleX, angleY: angleY };
     } else {
         return null;

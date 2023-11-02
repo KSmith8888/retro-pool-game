@@ -87,14 +87,11 @@ export default class Game {
     cueCollision() {
         const collisionData = areObjectsColliding(this.cueStick, this.cueBall);
         if (collisionData) {
-            const newSpeedX = Math.floor(
-                collisionData.angleX * this.cueBall.velocity
-            );
-            const newSpeedY = Math.floor(
-                collisionData.angleY * this.cueBall.velocity
-            );
+            const newSpeedX = Math.floor(collisionData.angleX * 15);
+            const newSpeedY = Math.floor(collisionData.angleY * 15);
             this.cueBall.speedX = newSpeedX;
             this.cueBall.speedY = newSpeedY;
+            this.cueBall.velocity = 1.1;
             this.cueBall.isMoving = true;
             //this.playerTurn = false;
         }

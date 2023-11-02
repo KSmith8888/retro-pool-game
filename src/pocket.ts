@@ -8,6 +8,8 @@ export default class Pocket {
     circleX: number;
     circleY: number;
     radius: number;
+    speedX: number;
+    speedY: number;
     constructor(game: Game, x: number, y: number) {
         this.game = game;
         this.ctx = this.game.ctx;
@@ -15,6 +17,8 @@ export default class Pocket {
         this.circleX = x;
         this.circleY = y;
         this.radius = 35;
+        this.speedX = 0;
+        this.speedY = 0;
     }
     checkCollision() {
         this.game.balls.forEach((ball) => {
