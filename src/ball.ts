@@ -19,7 +19,9 @@ export default class Ball {
     speedY: number;
     isMoving: boolean;
     velocity: number;
+    initVelocity: number;
     drag: number;
+    initDrag: number;
     isActive: boolean;
     hasCollided: boolean;
     constructor(
@@ -46,7 +48,9 @@ export default class Ball {
         this.arcNum = 2 * Math.PI;
         this.isMoving = false;
         this.velocity = 1;
-        this.drag = 0.2;
+        this.initVelocity = 1;
+        this.drag = 0.1;
+        this.initDrag = 0.1;
         this.isActive = true;
         this.hasCollided = false;
     }
@@ -88,15 +92,26 @@ export default class Ball {
                 const newSpeedY = Math.floor(collisionData.angleY * 10);
                 this.isMoving = true;
                 ball.isMoving = true;
-                if (this.velocity >= ball.velocity) {
-                    if (this.velocity >= 0.1) {
-                        this.velocity -= 0.1;
+                if (this.velocity > ball.velocity) {
+                    if (this.velocity >= 0.2) {
+                        this.velocity -= 0.2;
                     } else {
                         this.velocity = 0;
                     }
+                } else if (ball.velocity > this.velocity) {
+                    if (ball.velocity >= 0.2) {
+                        ball.velocity -= 0.2;
+                    } else {
+                        ball.velocity = 0;
+                    }
                 } else {
-                    if (ball.velocity >= 0.1) {
-                        ball.velocity -= 0.1;
+                    if (this.velocity >= 0.2) {
+                        this.velocity -= 0.2;
+                    } else {
+                        this.velocity = 0;
+                    }
+                    if (ball.velocity >= 0.2) {
+                        ball.velocity -= 0.2;
                     } else {
                         ball.velocity = 0;
                     }
@@ -141,11 +156,11 @@ export default class Ball {
         } else {
             this.speedY = 0;
         }
-        if (this.speedX === 0 && this.speedY === 0) {
-            this.isMoving = false;
-            this.drag = 0.1;
-            this.velocity = 1;
-        }
+    }
+    reset() {
+        this.isMoving = false;
+        this.drag = this.initDrag;
+        this.velocity = this.initVelocity;
     }
     updatePosition() {
         if (this.isMoving) {
@@ -155,6 +170,9 @@ export default class Ball {
         }
         this.tableCollision();
         this.ballCollision();
+        if (this.speedX === 0 && this.speedY === 0) {
+            this.reset();
+        }
     }
     render() {
         this.ctx.beginPath();

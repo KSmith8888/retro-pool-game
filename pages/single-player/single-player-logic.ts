@@ -46,22 +46,22 @@ export default class Game {
     initializeBalls() {
         const startingX = this.table.x + 300;
         const startingY = this.table.y + 200;
-        const step = 30;
+        const step = 27;
         const ballData = [
             { id: "1", x: startingX, y: startingY - step * 2 },
-            { id: "2", x: startingX + step, y: startingY - step * 3 + 10 },
-            { id: "3", x: startingX + step, y: startingY - step - 10 },
-            { id: "4", x: startingX + step * 2, y: startingY - step * 4 + 20 },
+            { id: "2", x: startingX + step, y: startingY - step * 3 + 9 },
+            { id: "3", x: startingX + step, y: startingY - step - 9 },
+            { id: "4", x: startingX + step * 2, y: startingY - step * 4 + 18 },
             { id: "5", x: startingX + step * 2, y: startingY - step * 2 },
-            { id: "6", x: startingX + step * 2, y: startingY - 20 },
+            { id: "6", x: startingX + step * 2, y: startingY - 18 },
             { id: "7", x: startingX + step * 3, y: startingY - step * 4 },
-            { id: "9", x: startingX + step * 3, y: startingY - step * 2 + 20 },
-            { id: "10", x: startingX + step * 3, y: startingY - step + 30 },
-            { id: "11", x: startingX + step * 4, y: startingY - step * 4 - 20 },
-            { id: "12", x: startingX + step * 4, y: startingY - step * 3 - 10 },
+            { id: "9", x: startingX + step * 3, y: startingY - step * 2 + 18 },
+            { id: "10", x: startingX + step * 3, y: startingY - step + 27 },
+            { id: "11", x: startingX + step * 4, y: startingY - step * 4 - 18 },
+            { id: "12", x: startingX + step * 4, y: startingY - step * 3 - 9 },
             { id: "13", x: startingX + step * 4, y: startingY - step * 2 },
-            { id: "14", x: startingX + step * 4, y: startingY - step + 10 },
-            { id: "15", x: startingX + step * 4, y: startingY + 20 },
+            { id: "14", x: startingX + step * 4, y: startingY - step + 9 },
+            { id: "15", x: startingX + step * 4, y: startingY + 18 },
         ];
         for (let i = 0; i < ballData.length; i++) {
             this.balls.push(
@@ -89,10 +89,11 @@ export default class Game {
         if (collisionData) {
             const newSpeedX = Math.floor(collisionData.angleX * 15);
             const newSpeedY = Math.floor(collisionData.angleY * 15);
+            this.cueStick.velocity = 15;
             this.cueBall.speedX = newSpeedX;
             this.cueBall.speedY = newSpeedY;
-            this.cueBall.velocity = 1.1;
             this.cueBall.isMoving = true;
+            //console.log(this.cueStick.velocity, this.cueBall.velocity);
             //this.playerTurn = false;
         }
     }

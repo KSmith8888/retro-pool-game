@@ -12,6 +12,8 @@ export default class CueBall extends Ball {
         y: number
     ) {
         super(game, ctx, table, id, x, y);
+        this.velocity = 1.1;
+        this.initVelocity = 1.1;
     }
     render() {
         this.ctx.save();
