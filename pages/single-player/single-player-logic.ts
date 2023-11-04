@@ -44,24 +44,24 @@ export default class Game {
         });
     }
     initializeBalls() {
-        const startingX = this.table.x + 300;
-        const startingY = this.table.y + 200;
-        const step = 27;
+        const startingX = this.table.x + 175;
+        const startingY = this.table.y + 125;
+        const step = 20;
         const ballData = [
             { id: "1", x: startingX, y: startingY - step * 2 },
-            { id: "2", x: startingX + step, y: startingY - step * 3 + 9 },
+            { id: "2", x: startingX + step, y: startingY - step * 3 + 6 },
             { id: "3", x: startingX + step, y: startingY - step - 9 },
-            { id: "4", x: startingX + step * 2, y: startingY - step * 4 + 18 },
+            { id: "4", x: startingX + step * 2, y: startingY - step * 4 + 12 },
             { id: "5", x: startingX + step * 2, y: startingY - step * 2 },
-            { id: "6", x: startingX + step * 2, y: startingY - 18 },
+            { id: "6", x: startingX + step * 2, y: startingY - 12 },
             { id: "7", x: startingX + step * 3, y: startingY - step * 4 },
-            { id: "9", x: startingX + step * 3, y: startingY - step * 2 + 18 },
-            { id: "10", x: startingX + step * 3, y: startingY - step + 27 },
-            { id: "11", x: startingX + step * 4, y: startingY - step * 4 - 18 },
-            { id: "12", x: startingX + step * 4, y: startingY - step * 3 - 9 },
+            { id: "9", x: startingX + step * 3, y: startingY - step * 2 + 12 },
+            { id: "10", x: startingX + step * 3, y: startingY - step + 18 },
+            { id: "11", x: startingX + step * 4, y: startingY - step * 4 - 12 },
+            { id: "12", x: startingX + step * 4, y: startingY - step * 3 - 6 },
             { id: "13", x: startingX + step * 4, y: startingY - step * 2 },
-            { id: "14", x: startingX + step * 4, y: startingY - step + 9 },
-            { id: "15", x: startingX + step * 4, y: startingY + 18 },
+            { id: "14", x: startingX + step * 4, y: startingY - step + 6 },
+            { id: "15", x: startingX + step * 4, y: startingY + 12 },
         ];
         for (let i = 0; i < ballData.length; i++) {
             this.balls.push(
@@ -98,18 +98,44 @@ export default class Game {
         }
     }
     initializePockets() {
-        this.pockets.push(new Pocket(this, this.table.x, this.table.y));
+        const cornerAdj = 14;
+        const sideAdj = 5;
         this.pockets.push(
-            new Pocket(this, this.table.x + this.table.width, this.table.y)
-        );
-        this.pockets.push(
-            new Pocket(this, this.table.x, this.table.y + this.table.height)
+            new Pocket(this, this.table.x + cornerAdj, this.table.y + cornerAdj)
         );
         this.pockets.push(
             new Pocket(
                 this,
-                this.table.x + this.table.width,
-                this.table.y + this.table.height
+                this.table.x + (this.table.width - cornerAdj),
+                this.table.y + cornerAdj
+            )
+        );
+        this.pockets.push(
+            new Pocket(
+                this,
+                this.table.x + cornerAdj,
+                this.table.y + (this.table.height - cornerAdj)
+            )
+        );
+        this.pockets.push(
+            new Pocket(
+                this,
+                this.table.x + this.table.width - cornerAdj,
+                this.table.y + this.table.height - cornerAdj
+            )
+        );
+        this.pockets.push(
+            new Pocket(
+                this,
+                this.table.x + this.table.width / 2,
+                this.table.y + sideAdj
+            )
+        );
+        this.pockets.push(
+            new Pocket(
+                this,
+                this.table.x + this.table.width / 2,
+                this.table.y + (this.table.height - sideAdj)
             )
         );
     }

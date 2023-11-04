@@ -16,7 +16,7 @@ export default class Pocket {
         this.arcNum = Math.PI * 2;
         this.circleX = x;
         this.circleY = y;
-        this.radius = 35;
+        this.radius = 20;
         this.speedX = 0;
         this.speedY = 0;
     }

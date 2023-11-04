@@ -38,9 +38,9 @@ export default class Ball {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.width = 30;
-        this.height = 30;
-        this.radius = 15;
+        this.width = 16;
+        this.height = 16;
+        this.radius = 8;
         this.circleX = this.x + this.radius;
         this.circleY = this.y + this.radius;
         this.speedX = 0;
@@ -61,7 +61,7 @@ export default class Ball {
                 this.speedX = this.speedX * -0.8;
             }
             this.drag = this.drag + 0.01;
-        } else if (this.circleX - this.radius <= this.table.x) {
+        } else if (this.circleX - this.radius <= this.table.leftEdge) {
             if (this.speedX < 0) {
                 this.circleX += 1;
                 this.speedX = this.speedX * -0.8;
@@ -73,7 +73,7 @@ export default class Ball {
                 this.speedY = this.speedY * -0.8;
             }
             this.drag = this.drag + 0.01;
-        } else if (this.circleY - this.radius <= this.table.y) {
+        } else if (this.circleY - this.radius <= this.table.topEdge) {
             if (this.speedY < 0) {
                 this.circleY -= 1;
                 this.speedY = this.speedY * -0.8;
