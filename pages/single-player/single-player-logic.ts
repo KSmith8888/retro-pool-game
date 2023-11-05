@@ -25,7 +25,14 @@ export default class Game {
         this.canvas.width = 900;
         this.canvas.height = 600;
         this.table = new Table(this.ctx);
-        this.cueBall = new CueBall(this, this.ctx, this.table, "Cue", 200, 200);
+        this.cueBall = new CueBall(
+            this,
+            this.ctx,
+            this.table,
+            "Cue",
+            this.table.x + 155,
+            this.table.y + this.table.height / 2
+        );
         this.balls = [];
         this.initializeBalls();
         this.cueStick = new CueStick(this, this.ctx);
@@ -44,24 +51,24 @@ export default class Game {
         });
     }
     initializeBalls() {
-        const startingX = this.table.x + 175;
-        const startingY = this.table.y + 125;
-        const step = 20;
+        const startingX = this.table.x + 500;
+        const startingY = this.table.y + 250;
+        const step = 27;
         const ballData = [
             { id: "1", x: startingX, y: startingY - step * 2 },
-            { id: "2", x: startingX + step, y: startingY - step * 3 + 6 },
+            { id: "2", x: startingX + step, y: startingY - step * 3 + 9 },
             { id: "3", x: startingX + step, y: startingY - step - 9 },
-            { id: "4", x: startingX + step * 2, y: startingY - step * 4 + 12 },
+            { id: "4", x: startingX + step * 2, y: startingY - step * 4 + 18 },
             { id: "5", x: startingX + step * 2, y: startingY - step * 2 },
-            { id: "6", x: startingX + step * 2, y: startingY - 12 },
+            { id: "6", x: startingX + step * 2, y: startingY - 18 },
             { id: "7", x: startingX + step * 3, y: startingY - step * 4 },
-            { id: "9", x: startingX + step * 3, y: startingY - step * 2 + 12 },
-            { id: "10", x: startingX + step * 3, y: startingY - step + 18 },
-            { id: "11", x: startingX + step * 4, y: startingY - step * 4 - 12 },
-            { id: "12", x: startingX + step * 4, y: startingY - step * 3 - 6 },
+            { id: "9", x: startingX + step * 3, y: startingY - step * 2 + 18 },
+            { id: "10", x: startingX + step * 3, y: startingY - step + 27 },
+            { id: "11", x: startingX + step * 4, y: startingY - step * 4 - 18 },
+            { id: "12", x: startingX + step * 4, y: startingY - step * 3 - 9 },
             { id: "13", x: startingX + step * 4, y: startingY - step * 2 },
-            { id: "14", x: startingX + step * 4, y: startingY - step + 6 },
-            { id: "15", x: startingX + step * 4, y: startingY + 12 },
+            { id: "14", x: startingX + step * 4, y: startingY - step + 9 },
+            { id: "15", x: startingX + step * 4, y: startingY + 18 },
         ];
         for (let i = 0; i < ballData.length; i++) {
             this.balls.push(
@@ -98,8 +105,8 @@ export default class Game {
         }
     }
     initializePockets() {
-        const cornerAdj = 14;
-        const sideAdj = 5;
+        const cornerAdj = 40;
+        const sideAdj = 26;
         this.pockets.push(
             new Pocket(this, this.table.x + cornerAdj, this.table.y + cornerAdj)
         );

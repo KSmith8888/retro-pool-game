@@ -38,9 +38,9 @@ export default class Ball {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.width = 16;
-        this.height = 16;
-        this.radius = 8;
+        this.width = 28;
+        this.height = 28;
+        this.radius = 14;
         this.circleX = this.x + this.radius;
         this.circleY = this.y + this.radius;
         this.speedX = 0;

@@ -1,4 +1,4 @@
-import tableImageUrl from "../assets/images/pool-table-v1.png";
+import tableImageUrl from "../assets/images/pool-table-v2.png";
 
 export default class Table {
     ctx: CanvasRenderingContext2D;
@@ -16,11 +16,11 @@ export default class Table {
         this.ctx = ctx;
         this.x = 100;
         this.y = 100;
-        this.width = 400;
-        this.height = 200;
+        this.width = 800;
+        this.height = 400;
         this.image = new Image();
         this.image.src = tableImageUrl;
-        this.collisionAdj = 24;
+        this.collisionAdj = 48;
         this.leftEdge = this.x + this.collisionAdj;
         this.topEdge = this.y + this.collisionAdj;
         this.rightEdge = this.x + this.width - this.collisionAdj;
