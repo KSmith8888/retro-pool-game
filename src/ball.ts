@@ -7,6 +7,8 @@ export default class Ball {
     ctx: CanvasRenderingContext2D;
     table: Table;
     id: string;
+    type: string;
+    color: string;
     arcNum: number;
     x: number;
     y: number;
@@ -29,6 +31,8 @@ export default class Ball {
         ctx: CanvasRenderingContext2D,
         table: Table,
         id: string,
+        type: string,
+        color: string,
         x: number,
         y: number
     ) {
@@ -36,6 +40,8 @@ export default class Ball {
         this.ctx = ctx;
         this.table = table;
         this.id = id;
+        this.type = type;
+        this.color = color;
         this.x = x;
         this.y = y;
         this.width = 28;
@@ -175,8 +181,11 @@ export default class Ball {
         }
     }
     render() {
+        this.ctx.save();
+        this.ctx.fillStyle = this.color;
         this.ctx.beginPath();
         this.ctx.arc(this.circleX, this.circleY, this.radius, 0, this.arcNum);
         this.ctx.fill();
+        this.ctx.restore();
     }
 }

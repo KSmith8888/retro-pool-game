@@ -11,13 +11,13 @@ export default class CueBall extends Ball {
         x: number,
         y: number
     ) {
-        super(game, ctx, table, id, x, y);
+        super(game, ctx, table, id, "Cue", "white", x, y);
         this.velocity = 1.1;
         this.initVelocity = 1.1;
     }
     render() {
         this.ctx.save();
-        this.ctx.fillStyle = "white";
+        this.ctx.fillStyle = this.color;
         this.ctx.beginPath();
         this.ctx.arc(this.circleX, this.circleY, this.radius, 0, this.arcNum);
         this.ctx.fill();

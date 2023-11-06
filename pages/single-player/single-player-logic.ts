@@ -4,6 +4,7 @@ import Table from "../../src/table";
 import CueStick from "../../src/cue-stick";
 import Pocket from "../../src/pocket";
 import { areObjectsColliding } from "../../src/utils/collision";
+import { EasyComputer } from "../../src/computer-players";
 
 export default class Game {
     canvas: HTMLCanvasElement;
@@ -18,6 +19,9 @@ export default class Game {
     timer: number;
     playerTurn: boolean;
     hit: void;
+    opponent: EasyComputer;
+    awaitNextTurn: boolean;
+    test: void;
     constructor() {
         this.canvas = <HTMLCanvasElement>document.getElementById("canvas");
         this.ctx = <CanvasRenderingContext2D>this.canvas.getContext("2d");
@@ -43,10 +47,17 @@ export default class Game {
         this.timer = 0;
         this.playerTurn = true;
         this.hit = this.canvas.addEventListener("mousemove", (e) => {
-            if (this.playerTurn) {
+            if (this.playerTurn && !this.awaitNextTurn) {
                 this.cueStick.circleX = e.clientX - 5;
                 this.cueStick.circleY = e.clientY - 5;
                 this.cueCollision();
+            }
+        });
+        this.opponent = new EasyComputer(this);
+        this.awaitNextTurn = false;
+        this.test = this.canvas.addEventListener("mousedown", (e) => {
+            if (e.button === 2) {
+                console.log(this.awaitNextTurn);
             }
         });
     }
@@ -55,20 +66,104 @@ export default class Game {
         const startingY = this.table.y + 250;
         const step = 27;
         const ballData = [
-            { id: "1", x: startingX, y: startingY - step * 2 },
-            { id: "2", x: startingX + step, y: startingY - step * 3 + 9 },
-            { id: "3", x: startingX + step, y: startingY - step - 9 },
-            { id: "4", x: startingX + step * 2, y: startingY - step * 4 + 18 },
-            { id: "5", x: startingX + step * 2, y: startingY - step * 2 },
-            { id: "6", x: startingX + step * 2, y: startingY - 18 },
-            { id: "7", x: startingX + step * 3, y: startingY - step * 4 },
-            { id: "9", x: startingX + step * 3, y: startingY - step * 2 + 18 },
-            { id: "10", x: startingX + step * 3, y: startingY - step + 27 },
-            { id: "11", x: startingX + step * 4, y: startingY - step * 4 - 18 },
-            { id: "12", x: startingX + step * 4, y: startingY - step * 3 - 9 },
-            { id: "13", x: startingX + step * 4, y: startingY - step * 2 },
-            { id: "14", x: startingX + step * 4, y: startingY - step + 9 },
-            { id: "15", x: startingX + step * 4, y: startingY + 18 },
+            {
+                id: "1",
+                type: "Solid",
+                color: "red",
+                x: startingX,
+                y: startingY - step * 2,
+            },
+            {
+                id: "2",
+                type: "Solid",
+                color: "red",
+                x: startingX + step,
+                y: startingY - step * 3 + 9,
+            },
+            {
+                id: "3",
+                type: "Solid",
+                color: "red",
+                x: startingX + step,
+                y: startingY - step - 9,
+            },
+            {
+                id: "4",
+                type: "Solid",
+                color: "red",
+                x: startingX + step * 2,
+                y: startingY - step * 4 + 18,
+            },
+            {
+                id: "5",
+                type: "Solid",
+                color: "red",
+                x: startingX + step * 2,
+                y: startingY - step * 2,
+            },
+            {
+                id: "6",
+                type: "Solid",
+                color: "red",
+                x: startingX + step * 2,
+                y: startingY - 18,
+            },
+            {
+                id: "7",
+                type: "Solid",
+                color: "red",
+                x: startingX + step * 3,
+                y: startingY - step * 4,
+            },
+            {
+                id: "9",
+                type: "Stripe",
+                color: "yellow",
+                x: startingX + step * 3,
+                y: startingY - step * 2 + 18,
+            },
+            {
+                id: "10",
+                type: "Stripe",
+                color: "yellow",
+                x: startingX + step * 3,
+                y: startingY - step + 27,
+            },
+            {
+                id: "11",
+                type: "Stripe",
+                color: "yellow",
+                x: startingX + step * 4,
+                y: startingY - step * 4 - 18,
+            },
+            {
+                id: "12",
+                type: "Stripe",
+                color: "yellow",
+                x: startingX + step * 4,
+                y: startingY - step * 3 - 9,
+            },
+            {
+                id: "13",
+                type: "Stripe",
+                color: "yellow",
+                x: startingX + step * 4,
+                y: startingY - step * 2,
+            },
+            {
+                id: "14",
+                type: "Stripe",
+                color: "yellow",
+                x: startingX + step * 4,
+                y: startingY - step + 9,
+            },
+            {
+                id: "15",
+                type: "Stripe",
+                color: "yellow",
+                x: startingX + step * 4,
+                y: startingY + 18,
+            },
         ];
         for (let i = 0; i < ballData.length; i++) {
             this.balls.push(
@@ -77,6 +172,8 @@ export default class Game {
                     this.ctx,
                     this.table,
                     ballData[i].id,
+                    ballData[i].type,
+                    ballData[i].color,
                     ballData[i].x,
                     ballData[i].y
                 )
@@ -100,8 +197,27 @@ export default class Game {
             this.cueBall.speedX = newSpeedX;
             this.cueBall.speedY = newSpeedY;
             this.cueBall.isMoving = true;
-            //console.log(this.cueStick.velocity, this.cueBall.velocity);
-            //this.playerTurn = false;
+            this.playerTurn = !this.playerTurn;
+            this.cueStick.circleX = this.table.x;
+            this.cueStick.circleY = this.table.y - this.cueStick.height;
+            this.awaitNextTurn = true;
+        }
+    }
+    nextTurn() {
+        if (this.awaitNextTurn) {
+            let movementHasEnded = true;
+            const activeBalls = this.balls.filter((ball) => ball.isActive);
+            activeBalls.forEach((ball) => {
+                if (ball.speedX !== 0 || ball.speedY !== 0) {
+                    movementHasEnded = false;
+                }
+            });
+            if (movementHasEnded) {
+                this.awaitNextTurn = false;
+                if (!this.playerTurn) {
+                    this.opponent.turn();
+                }
+            }
         }
     }
     initializePockets() {
@@ -160,6 +276,7 @@ export default class Game {
             this.table.render();
             this.updateBalls();
             this.pocketCollision();
+            this.nextTurn();
             this.cueStick.render();
             this.timer -= deltaTime;
         } else {
