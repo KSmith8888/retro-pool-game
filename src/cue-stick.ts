@@ -12,7 +12,7 @@ export default class CueStick {
     radius: number;
     speedX: number;
     speedY: number;
-    velocity: number;
+    power: number;
     constructor(game: Game, ctx: CanvasRenderingContext2D) {
         this.game = game;
         this.ctx = ctx;
@@ -25,7 +25,7 @@ export default class CueStick {
         this.radius = 5;
         this.speedX = 0;
         this.speedY = 0;
-        this.velocity = 15;
+        this.power = 15;
     }
     render() {
         this.ctx.save();

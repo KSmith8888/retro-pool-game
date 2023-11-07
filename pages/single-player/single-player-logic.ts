@@ -4,11 +4,13 @@ import Table from "../../src/table";
 import CueStick from "../../src/cue-stick";
 import Pocket from "../../src/pocket";
 import { areObjectsColliding } from "../../src/utils/collision";
+import Player from "../../src/player";
 import { EasyComputer } from "../../src/computer-players";
 
 export default class Game {
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
+    player: Player;
     table: Table;
     cueBall: CueBall;
     balls: Array<Ball | CueBall>;
@@ -21,6 +23,8 @@ export default class Game {
     hit: void;
     opponent: EasyComputer;
     awaitNextTurn: boolean;
+    playerScore: number;
+    opponentScore: number;
     test: void;
     constructor() {
         this.canvas = <HTMLCanvasElement>document.getElementById("canvas");
@@ -28,6 +32,7 @@ export default class Game {
         this.ctx.fillStyle = "white";
         this.canvas.width = 900;
         this.canvas.height = 600;
+        this.player = new Player(this);
         this.table = new Table(this.ctx);
         this.cueBall = new CueBall(
             this,
@@ -48,16 +53,16 @@ export default class Game {
         this.playerTurn = true;
         this.hit = this.canvas.addEventListener("mousemove", (e) => {
             if (this.playerTurn && !this.awaitNextTurn) {
-                this.cueStick.circleX = e.clientX - 5;
-                this.cueStick.circleY = e.clientY - 5;
-                this.cueCollision();
+                this.player.turn(e.clientX, e.clientY);
             }
         });
         this.opponent = new EasyComputer(this);
         this.awaitNextTurn = false;
+        this.playerScore = 0;
+        this.opponentScore = 0;
         this.test = this.canvas.addEventListener("mousedown", (e) => {
             if (e.button === 2) {
-                console.log(this.awaitNextTurn);
+                console.log(this.playerTurn, this.awaitNextTurn);
             }
         });
     }
@@ -191,16 +196,49 @@ export default class Game {
     cueCollision() {
         const collisionData = areObjectsColliding(this.cueStick, this.cueBall);
         if (collisionData) {
-            const newSpeedX = Math.floor(collisionData.angleX * 15);
-            const newSpeedY = Math.floor(collisionData.angleY * 15);
-            this.cueStick.velocity = 15;
+            const newSpeedX = Math.floor(
+                collisionData.angleX * this.cueStick.power
+            );
+            const newSpeedY = Math.floor(
+                collisionData.angleY * this.cueStick.power
+            );
+            //this.cueStick.velocity = 15;
             this.cueBall.speedX = newSpeedX;
             this.cueBall.speedY = newSpeedY;
             this.cueBall.isMoving = true;
-            this.playerTurn = !this.playerTurn;
+            //this.playerTurn = !this.playerTurn;
             this.cueStick.circleX = this.table.x;
             this.cueStick.circleY = this.table.y - this.cueStick.height;
             this.awaitNextTurn = true;
+        }
+    }
+    updateScores() {
+        if (this.playerTurn) {
+            if (this.playerScore !== this.player.pocketed.length) {
+                this.playerScore = this.player.pocketed.length;
+            } else if (this.opponentScore !== this.opponent.pocketed.length) {
+                this.opponentScore = this.opponent.pocketed.length;
+                this.playerTurn = false;
+                this.opponent.turn();
+            } else {
+                this.playerTurn = false;
+                this.opponent.turn();
+            }
+        } else {
+            if (this.opponentScore !== this.opponent.pocketed.length) {
+                this.opponentScore = this.opponent.pocketed.length;
+                this.opponent.turn();
+            } else if (this.playerScore !== this.player.pocketed.length) {
+                this.playerScore = this.player.pocketed.length;
+                this.playerTurn = true;
+            } else {
+                this.playerTurn = true;
+            }
+        }
+        if (this.player.pocketed.length === 7) {
+            this.player.canTargetEightBall = true;
+        } else if (this.opponent.pocketed.length === 7) {
+            this.opponent.canTargetEightBall = true;
         }
     }
     nextTurn() {
@@ -214,9 +252,7 @@ export default class Game {
             });
             if (movementHasEnded) {
                 this.awaitNextTurn = false;
-                if (!this.playerTurn) {
-                    this.opponent.turn();
-                }
+                this.updateScores();
             }
         }
     }
@@ -224,41 +260,51 @@ export default class Game {
         const cornerAdj = 40;
         const sideAdj = 26;
         this.pockets.push(
-            new Pocket(this, this.table.x + cornerAdj, this.table.y + cornerAdj)
+            new Pocket(
+                this,
+                this.table.x + cornerAdj,
+                this.table.y + cornerAdj,
+                1
+            )
         );
         this.pockets.push(
             new Pocket(
                 this,
                 this.table.x + (this.table.width - cornerAdj),
-                this.table.y + cornerAdj
+                this.table.y + cornerAdj,
+                2
             )
         );
         this.pockets.push(
             new Pocket(
                 this,
                 this.table.x + cornerAdj,
-                this.table.y + (this.table.height - cornerAdj)
+                this.table.y + (this.table.height - cornerAdj),
+                3
             )
         );
         this.pockets.push(
             new Pocket(
                 this,
                 this.table.x + this.table.width - cornerAdj,
-                this.table.y + this.table.height - cornerAdj
+                this.table.y + this.table.height - cornerAdj,
+                4
             )
         );
         this.pockets.push(
             new Pocket(
                 this,
                 this.table.x + this.table.width / 2,
-                this.table.y + sideAdj
+                this.table.y + sideAdj,
+                5
             )
         );
         this.pockets.push(
             new Pocket(
                 this,
                 this.table.x + this.table.width / 2,
-                this.table.y + (this.table.height - sideAdj)
+                this.table.y + (this.table.height - sideAdj),
+                6
             )
         );
     }
