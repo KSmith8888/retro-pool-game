@@ -12,7 +12,7 @@ export class EasyComputer {
         this.pocketed = [];
     }
     turn() {
-        const randomPower = Math.floor(Math.random() * 15) + 5;
+        const randomPower = Math.floor(Math.random() * 15) + 10;
         this.game.cueStick.power = randomPower;
         const randomX =
             Math.random() < 0.5

@@ -25,6 +25,7 @@ export default class Game {
     awaitNextTurn: boolean;
     playerScore: number;
     opponentScore: number;
+    scratch: boolean;
     test: void;
     constructor() {
         this.canvas = <HTMLCanvasElement>document.getElementById("canvas");
@@ -60,6 +61,7 @@ export default class Game {
         this.awaitNextTurn = false;
         this.playerScore = 0;
         this.opponentScore = 0;
+        this.scratch = false;
         this.test = this.canvas.addEventListener("mousedown", (e) => {
             if (e.button === 2) {
                 console.log(this.playerTurn, this.awaitNextTurn);
@@ -202,11 +204,9 @@ export default class Game {
             const newSpeedY = Math.floor(
                 collisionData.angleY * this.cueStick.power
             );
-            //this.cueStick.velocity = 15;
             this.cueBall.speedX = newSpeedX;
             this.cueBall.speedY = newSpeedY;
             this.cueBall.isMoving = true;
-            //this.playerTurn = !this.playerTurn;
             this.cueStick.circleX = this.table.x;
             this.cueStick.circleY = this.table.y - this.cueStick.height;
             this.awaitNextTurn = true;
@@ -214,7 +214,14 @@ export default class Game {
     }
     updateScores() {
         if (this.playerTurn) {
-            if (this.playerScore !== this.player.pocketed.length) {
+            if (this.scratch) {
+                this.playerTurn = false;
+                this.scratch = false;
+                this.cueBall.circleX = this.table.x + 155;
+                this.cueBall.circleY = this.table.y + this.table.height / 2;
+                this.cueBall.isActive = true;
+                this.opponent.turn();
+            } else if (this.playerScore !== this.player.pocketed.length) {
                 this.playerScore = this.player.pocketed.length;
             } else if (this.opponentScore !== this.opponent.pocketed.length) {
                 this.opponentScore = this.opponent.pocketed.length;
@@ -225,7 +232,13 @@ export default class Game {
                 this.opponent.turn();
             }
         } else {
-            if (this.opponentScore !== this.opponent.pocketed.length) {
+            if (this.scratch) {
+                this.cueBall.circleX = this.table.x + 155;
+                this.cueBall.circleY = this.table.y + this.table.height / 2;
+                this.cueBall.isActive = true;
+                this.playerTurn = true;
+                this.scratch = false;
+            } else if (this.opponentScore !== this.opponent.pocketed.length) {
                 this.opponentScore = this.opponent.pocketed.length;
                 this.opponent.turn();
             } else if (this.playerScore !== this.player.pocketed.length) {

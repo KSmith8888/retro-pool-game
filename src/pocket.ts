@@ -65,7 +65,13 @@ export default class Pocket {
         this.game.balls.forEach((ball) => {
             if (areObjectsColliding(this, ball)) {
                 ball.isActive = false;
-                this.score(ball.type, ball.id);
+                ball.speedX = 0;
+                ball.speedY = 0;
+                if (ball.id !== "Cue") {
+                    this.score(ball.type, ball.id);
+                } else {
+                    this.game.scratch = true;
+                }
             }
         });
     }
