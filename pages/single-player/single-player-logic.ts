@@ -270,8 +270,8 @@ export default class Game {
         }
     }
     initializePockets() {
-        const cornerAdj = 40;
-        const sideAdj = 26;
+        const cornerAdj = 44;
+        const sideAdj = 28;
         this.pockets.push(
             new Pocket(
                 this,
@@ -315,7 +315,7 @@ export default class Game {
         this.pockets.push(
             new Pocket(
                 this,
-                this.table.x + this.table.width / 2,
+                this.table.x + this.table.width / 2 + 2,
                 this.table.y + (this.table.height - sideAdj),
                 6
             )
@@ -324,7 +324,7 @@ export default class Game {
     pocketCollision() {
         this.pockets.forEach((pocket) => {
             pocket.checkCollision();
-            pocket.render();
+            //pocket.render();
         });
     }
     animate(timeStamp: number) {

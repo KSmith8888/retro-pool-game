@@ -1,4 +1,4 @@
-import tableImageUrl from "../assets/images/pool-table-v2.png";
+import tableImageUrl from "../assets/images/pool-table-v3.png";
 
 export default class Table {
     ctx: CanvasRenderingContext2D;

@@ -76,7 +76,7 @@ export default class Pocket {
         });
     }
     render() {
-        this.ctx.fillStyle = "black";
+        this.ctx.fillStyle = "purple";
         this.ctx.beginPath();
         this.ctx.arc(this.circleX, this.circleY, this.radius, 0, this.arcNum);
         this.ctx.fill();
