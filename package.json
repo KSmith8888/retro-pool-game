@@ -20,8 +20,8 @@
     },
     "homepage": "https://github.com/KSmith8888/retro-pool-game#readme",
     "devDependencies": {
-        "@types/node": "^20.8.9",
-        "typescript": "^5.2.2",
-        "vite": "^4.5.0"
+        "@types/node": "^20.10.6",
+        "typescript": "^5.3.3",
+        "vite": "^4.5.1"
     }
 }
