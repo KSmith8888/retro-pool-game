@@ -20,6 +20,7 @@ export default class Game {
     interval: number;
     timer: number;
     playerTurn: boolean;
+    readyToHit: boolean;
     hit: void;
     opponent: EasyComputer;
     awaitNextTurn: boolean;
@@ -52,8 +53,9 @@ export default class Game {
         this.interval = 1000 / 60;
         this.timer = 0;
         this.playerTurn = true;
+        this.readyToHit = false;
         this.hit = this.canvas.addEventListener("mousemove", (e) => {
-            if (this.playerTurn && !this.awaitNextTurn) {
+            if (this.playerTurn && !this.awaitNextTurn && this.readyToHit) {
                 this.player.turn(e.clientX, e.clientY);
             }
         });
@@ -65,6 +67,8 @@ export default class Game {
         this.test = this.canvas.addEventListener("mousedown", (e) => {
             if (e.button === 2) {
                 console.log(this.playerTurn, this.awaitNextTurn);
+            } else if (e.button === 0 && this.playerTurn) {
+                this.readyToHit = true;
             }
         });
     }
@@ -210,6 +214,7 @@ export default class Game {
             this.cueStick.circleX = this.table.x;
             this.cueStick.circleY = this.table.y - this.cueStick.height;
             this.awaitNextTurn = true;
+            this.readyToHit = false;
         }
     }
     updateScores() {
